@@ -1,17 +1,23 @@
-const mongoose = require('mongoose');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+// ===========================
+// Reviews Bot — index.js
+// ===========================
 
-// Read from environment variables
+// 1️⃣ Import required packages
+const fs = require('fs');
+const path = require('path'); // <-- make sure path is imported
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const mongoose = require('mongoose');
+
+// 2️⃣ Environment variables from Railway
 const token = process.env.TOKEN;
 const mongoURI = process.env.MONGO_URI;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
-console.log('mongoURI:', mongoURI); // optional debug
 
-// 3️⃣ Test mongoURI
+// 3️⃣ Debug Mongo URI (optional)
 console.log('mongoURI:', mongoURI);
 
-// 4️⃣ Connect to MongoDB
+// 4️⃣ Connect to MongoDB (Mongoose v7+)
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -29,8 +35,11 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
     const command = require(filePath);
-    // command.data.name must exist in your command file
-    client.commands.set(command.data.name, command);
+    if (command.data && command.execute) {
+        client.commands.set(command.data.name, command);
+    } else {
+        console.warn(`[WARN] Command ${file} is missing data or execute property.`);
+    }
 }
 
 // 8️⃣ Handle slash commands
