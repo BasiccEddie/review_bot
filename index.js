@@ -1,15 +1,12 @@
-// ===========================
-// Reviews Bot — index.js
-// ===========================
-
-// 1️⃣ Import required packages
-const fs = require('fs');
-const path = require('path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const mongoose = require('mongoose');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 
-// 2️⃣ Import configuration
-const { token, mongoURI } = require('./config.json');
+// Read from environment variables
+const token = process.env.TOKEN;
+const mongoURI = process.env.MONGO_URI;
+const clientId = process.env.CLIENT_ID;
+const guildId = process.env.GUILD_ID;
+console.log('mongoURI:', mongoURI); // optional debug
 
 // 3️⃣ Test mongoURI
 console.log('mongoURI:', mongoURI);
